@@ -1,41 +1,56 @@
 #include <Arduino.h>
-#include "MPU6050Sensor.h"
+#include "RobotAM84R.h"
 
-MPU6050Sensor my_mpu;
+
+RobotAM84R myRobot;
 float accelerationX, accelerationY, accelerationZ;
 float gyroX, gyroY, gyroZ;
 float temp;
+unsigned long previousMillis = 0;
+const unsigned long interval = 1000;  // Intervalo de 1 segundo
 
 void setup() {
+    IPAddress ipAddress;
     Serial.begin(115200);
     Serial.println("SETUP ESP");
-    my_mpu.init(MPU6050_RANGE_8_G, MPU6050_RANGE_500_DEG, MPU6050_BAND_5_HZ);
+    myRobot.init();
+    if (myRobot.init_server("Casa", "Dacs2403", ipAddress)) {
+        Serial.println("WiFi conectado");
+        Serial.print("Dirección IP asignada: ");
+        Serial.println(ipAddress);
+    } else {
+        Serial.println("Error de conexion");
+    }
+
 }
 
 
 void loop() {
-    Serial.println("loop");
-
-    // Llamar al método get_event para obtener los datos
-    my_mpu.get_event(&accelerationX, &accelerationY, &accelerationZ, &gyroX, &gyroY, &gyroZ, &temp);
     
-    // Ahora puedes usar los valores obtenidos en tu programa
-    Serial.print("Aceleración X: ");
-    Serial.println(accelerationX);
-    Serial.print("Aceleración Y: ");
-    Serial.println(accelerationY);
-    Serial.print("Aceleración Z: ");
-    Serial.println(accelerationZ);
+    myRobot.web_client();
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= interval) {
+        previousMillis = currentMillis;
+        myRobot.get_mpu_event(&accelerationX,&accelerationY,&accelerationZ,&gyroX,&gyroY,&gyroZ,&temp);
 
-    Serial.print("Giro X: ");
-    Serial.println(gyroX);
-    Serial.print("Giro Y: ");
-    Serial.println(gyroY);
-    Serial.print("Giro Z: ");
-    Serial.println(gyroZ);
+        
+        // Ahora puedes usar los valores obtenidos en tu programa
+        Serial.print("NAceleración X: ");
+        Serial.println(accelerationX);
+        Serial.print("Aceleración Y: ");
+        Serial.println(accelerationY);
+        Serial.print("Aceleración Z: ");
+        Serial.println(accelerationZ);
 
-    Serial.print("Temperatura: ");
-    Serial.println(temp);
+        Serial.print("Giro X: ");
+        Serial.println(gyroX);
+        Serial.print("Giro Y: ");
+        Serial.println(gyroY);
+        Serial.print("Giro Z: ");
+        Serial.println(gyroZ);
 
-    delay(1000); 
+        Serial.print("Temperatura: ");
+        Serial.println(temp);
+
+    }
 }

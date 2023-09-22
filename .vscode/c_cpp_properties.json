@@ -217,6 +217,7 @@
                 "/Users/danielclaveria/Library/Arduino15/packages/esp32/hardware/esp32/2.0.11/tools/sdk/esp32/qio_qspi/include",
                 "/Users/danielclaveria/Library/Arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32",
                 "/Users/danielclaveria/Library/Arduino15/packages/esp32/hardware/esp32/2.0.11/variants/esp32",
+                "/Users/danielclaveria/Library/Arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/WiFi/src",
                 "/Users/danielclaveria/Documents/Arduino/libraries/Adafruit_MPU6050",
                 "/Users/danielclaveria/Documents/Arduino/libraries/Adafruit_BusIO",
                 "/Users/danielclaveria/Library/Arduino15/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src",
