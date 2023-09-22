@@ -3,11 +3,17 @@
 
 #include <WiFi.h>
 #include "MPU6050Sensor.h"
+#include "L298NController.h"
 
 class RobotAM84R {
 private:
-    const char* ssid;
-    const char* password;
+    MPU6050Sensor robot_mpu;
+    L298NController robot_motors;
+    WiFiServer server;
+    String header;
+    String outState;
+    const int out = 2;
+    int contconexion = 0;
 
 public:
     RobotAM84R();
@@ -16,6 +22,7 @@ public:
     void get_mpu_event(float *accelerationX, float *accelerationY, float *accelerationZ, float *gyroX, float *gyroY, float *gyroZ, float *temp);
     bool init_server(char *pssid, char *ppassword, IPAddress& ipAddress);
     void web_client();
+    void init_motors();
     void forward();
     void backward();
     void left();

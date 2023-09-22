@@ -1,7 +1,8 @@
 
 #include "RobotAM84R.h"
-
+const char *name;
 MPU6050Sensor robot_mpu;
+L298NController robot_motors;
 WiFiServer server(80);
 const char *ssid;
 const char *password;
@@ -31,11 +32,13 @@ String html = "<!DOCTYPE html>"
 
 RobotAM84R::RobotAM84R()
 {
+    name = "AM84R";
 }
 
 void RobotAM84R::init()
 {
     init_mpu_sensor();
+    init_motors();
 }
 
 void RobotAM84R::init_mpu_sensor()
@@ -151,29 +154,34 @@ void RobotAM84R::web_client()
     }
 }
 
+void RobotAM84R::init_motors()
+{
+    robot_motors.init();
+}
+
 void RobotAM84R::forward()
 {
-
+    robot_motors.forward();
 }
 void RobotAM84R::backward()
 {
-    
+    robot_motors.backward();
 }
 void RobotAM84R::left()
 {
-    
+    robot_motors.left();
 }
 void RobotAM84R::right()
 {
-    
+    robot_motors.right();
 }
 void RobotAM84R::stop()
 {
-    
+    robot_motors.stop();
 }
 void RobotAM84R::see0()
 {
-    
+
 }
 void RobotAM84R::see90()
 {
