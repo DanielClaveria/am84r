@@ -5,13 +5,14 @@
 
 class L298NController {
     private:
-    const unsigned int EN_A = 13;
-    const unsigned int IN1_A = 4;
-    const unsigned int IN2_A = 16;
+    const unsigned int EN_A = 12;
+    const unsigned int IN1_A = 14;
+    const unsigned int IN2_A = 27;
 
-    const unsigned int IN1_B = 17;
-    const unsigned int IN2_B = 5;
-    const unsigned int EN_B = 12;
+    const unsigned int IN1_B = 26;
+    const unsigned int IN2_B = 25;
+    const unsigned int EN_B = 33;
+
 
     public:
         L298NController();
@@ -22,6 +23,7 @@ class L298NController {
         void left();
         void right();
         void stop();
+        
 };
 
 #endif

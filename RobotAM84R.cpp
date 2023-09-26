@@ -10,25 +10,8 @@ String header;
 String outState = "off";
 const int out = 2;
 int contconexion = 0;
-String html = "<!DOCTYPE html>"
-              "<html>"
-              "<head>"
-              "<meta charset='utf-8' />"
-              "<title>Servidor Web ESP32</title>"
-              "</head>"
-              "<body>"
-              "<center>"
-              "<h1>Servidor Web ESP32</h1>"
-              "<table>"
-              "<tr><td></td><td><a href='/forward'><button style='height:50px;width:100px'>FORWARD</button></a></td><td></td>"
-              "<tr><td><a href='/left'><button style='height:50px;width:100px'>LEFT</button></a></td><td><a href='/stop'><button style='height:50px;width:100px'>STOP</button></a></td><td><a href='/right'><button style='height:50px;width:100px'>RIGHT</button></a></td>"
-              "<tr><td></td><td><a href='/backward'><button style='height:50px;width:100px'>BACKWARD</button></a></td><td></td>"
-              "<tr><td><a href='/see0'><button style='height:50px;width:100px'>SEE 0°</button></a></td><td><a href='/see90'><button style='height:50px;width:100px'>SEE 90°</button></a></td><td><a href='/see180'><button style='height:50px;width:100px'>SEE 180°</button></a></td>"
-              "<tr><td></td><td><a href='/distance'><button style='height:50px;width:100px'>DISTANCE</button></a></td><td></td>"
-              "</table>"
-              "</center>"
-              "</body>"
-              "</html>";
+float distance = 500;
+
 
 RobotAM84R::RobotAM84R()
 {
@@ -37,8 +20,10 @@ RobotAM84R::RobotAM84R()
 
 void RobotAM84R::init()
 {
-    init_mpu_sensor();
+
     init_motors();
+    init_echo();
+    init_mpu_sensor();
 }
 
 void RobotAM84R::init_mpu_sensor()
@@ -70,6 +55,26 @@ bool RobotAM84R::init_server(char *pssid, char *ppassword, IPAddress& ipAddress)
 
 void RobotAM84R::web_client()
 {
+    String html = "<!DOCTYPE html>"
+              "<html>"
+              "<head>"
+              "<meta charset='utf-8' />"
+              "<title>Servidor Web ESP32</title>"
+              "</head>"
+              "<body>"
+              "<center>"
+              "<h1>Servidor Web ESP32</h1>"
+              "<table>"
+              "<tr><td></td><td><a href='/forward'><button style='height:50px;width:100px'>FORWARD</button></a></td><td></td>"
+              "<tr><td><a href='/left'><button style='height:50px;width:100px'>LEFT</button></a></td><td><a href='/stop'><button style='height:50px;width:100px'>STOP</button></a></td><td><a href='/right'><button style='height:50px;width:100px'>RIGHT</button></a></td>"
+              "<tr><td></td><td><a href='/backward'><button style='height:50px;width:100px'>BACKWARD</button></a></td><td></td>"
+        //      "<tr><td><a href='/see0'><button style='height:50px;width:100px'>SEE 0°</button></a></td><td><a href='/see90'><button style='height:50px;width:100px'>SEE 90°</button></a></td><td><a href='/see180'><button style='height:50px;width:100px'>SEE 180°</button></a></td>"
+              "<tr><td></td><td><a href='/distance'><button style='height:50px;width:100px'>DISTANCE</button></a></td><td></td>"
+              "<tr><td></td><td>DISTANCE" + String(distance) + "</button></a></td><td></td>"
+              "</table>"
+              "</center>"
+              "</body>"
+              "</html>";
     WiFiClient client = server.available(); // Escucha a los clientes entrantes
 
     if (client)
@@ -113,21 +118,9 @@ void RobotAM84R::web_client()
                         {
                             stop();
                         }
-                        else if (header.indexOf("GET /see0") >= 0)
-                        {
-                            see0();
-                        }
-                        else if (header.indexOf("GET /see90") >= 0)
-                        {
-                            see90();
-                        }
-                        else if (header.indexOf("GET /see180") >= 0)
-                        {
-                            see90();
-                        }
                         else if (header.indexOf("GET /distance") >= 0)
                         {
-                            distance();
+                            distance = get_distance();
                         }
                         // Muestra la página web
                         client.println(html);
@@ -179,19 +172,24 @@ void RobotAM84R::stop()
 {
     robot_motors.stop();
 }
-void RobotAM84R::see0()
-{
 
-}
-void RobotAM84R::see90()
+void RobotAM84R::init_echo()
 {
-    
+    pinMode(TRIG_PIN, OUTPUT);
+    // configure the echo pin to input mode
+    pinMode(ECHO_PIN, INPUT);
 }
-void RobotAM84R::see180()
+float RobotAM84R::get_distance()
 {
-    
-}
-void RobotAM84R::distance()
-{
-    
+    float duration_us, distance_cm;
+    digitalWrite(TRIG_PIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TRIG_PIN, LOW);
+
+    // measure duration of pulse from ECHO pin
+    duration_us = pulseIn(ECHO_PIN, HIGH);
+
+    // calculate the distance
+    distance_cm = 0.017 * duration_us;
+    return distance_cm;
 }

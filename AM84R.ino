@@ -3,7 +3,6 @@
 #include "RobotAM84R.h"
 
 
-
 RobotAM84R myRobot;
 float accelerationX, accelerationY, accelerationZ;
 float gyroX, gyroY, gyroZ;

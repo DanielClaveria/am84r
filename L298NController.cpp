@@ -8,8 +8,8 @@ const unsigned int IN1_B = 26;
 const unsigned int IN2_B = 25;
 const unsigned int EN_B = 33;
 
-L298NX2 motors(EN_A, IN1_A, IN2_A, EN_B, IN1_B, IN2_B);
-
+// L298NX2 motors(EN_A, IN1_A, IN2_A, EN_B, IN1_B, IN2_B);
+L298NX2 motors(IN1_A, IN2_A, IN1_B, IN2_B);
 L298NController::L298NController()
 {
 
